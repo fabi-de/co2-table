@@ -91,6 +91,29 @@
     background: linear-gradient(0deg, rgba(2,10,18,0.85), transparent);
   }
   footer.credit b { color: var(--accent-pause); font-weight: 700; }
+
+  /* Persistent global language switcher flag */
+  .lang-switch-btn {
+    position: fixed;
+    top: max(10px, env(safe-area-inset-top));
+    left: 12px;
+    z-index: 40;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(2, 14, 24, 0.6);
+    border: 1px solid var(--border);
+    font-size: 19px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  }
+  .lang-switch-btn:active { transform: scale(0.92); }
+  .lang-switch-btn.hide { display: none; }
   .screen { width: 100%; max-width: 440px; display: none; flex-direction: column; align-items: center; }
   .screen.active { display: flex; }
 
@@ -361,7 +384,7 @@
 
   /* Language screen */
   #language-screen .card { text-align: center; }
-  .lang-btn {
+  .lang-btn, .choice-btn {
     width: 100%;
     background: rgba(2, 14, 24, 0.55);
     border: 1px solid var(--border);
@@ -376,9 +399,130 @@
     justify-content: center;
     gap: 10px;
   }
-  .lang-btn:last-child { margin-bottom: 0; }
-  .lang-btn:active { transform: scale(0.98); border-color: var(--accent-pause); }
+  .lang-btn:last-child, .choice-btn:last-child { margin-bottom: 0; }
+  .lang-btn:active, .choice-btn:active { transform: scale(0.98); border-color: var(--accent-pause); }
   .lang-flag { font-size: 22px; }
+  .choice-sub { display: block; font-size: 12px; font-weight: 500; color: var(--text-dim); margin-top: 2px; }
+  .choice-icon { font-size: 26px; }
+  .choice-text { display: flex; flex-direction: column; align-items: flex-start; }
+
+  /* Back button (mirrors info button on the opposite side) */
+  .back-btn {
+    position: absolute;
+    top: 0;
+    right: 4px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(2, 14, 24, 0.55);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-weight: 800;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    padding: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Breath-hold stopwatch screen */
+  #hold-screen, #hold-history-screen { position: relative; }
+  .hold-status {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 22px;
+    min-height: 26px;
+  }
+  .hold-circle-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0 24px;
+  }
+  .hold-btn {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: none;
+    font-size: 24px;
+    font-weight: 800;
+    color: #032018;
+    background: linear-gradient(135deg, #2de8b0, #4de3ff);
+    box-shadow: 0 10px 30px rgba(45, 232, 176, 0.3);
+  }
+  .hold-btn.running {
+    background: linear-gradient(135deg, #ff7a5c, #ff5b8f);
+    box-shadow: 0 10px 30px rgba(255, 122, 92, 0.35);
+    animation: holdPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes holdPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.045); }
+  }
+  .hold-result {
+    text-align: center;
+    min-height: 70px;
+    margin-bottom: 10px;
+  }
+  .hold-result .record-time {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--accent-green);
+    font-variant-numeric: tabular-nums;
+  }
+  .hold-result .record-label {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  /* History / chart screen */
+  .chart-wrap {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px 10px;
+    margin-bottom: 18px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .chart-wrap svg { width: 100%; height: 180px; display: block; }
+  .history-stats-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .history-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+  .history-item .hi-time {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: 16px;
+  }
+  .history-item .hi-date { color: var(--text-dim); font-size: 12px; }
+  .history-item.is-best .hi-time { color: var(--accent-green); }
+  .history-empty { text-align: center; color: var(--text-dim); font-size: 14px; padding: 20px 0; }
 
   /* Info button */
   .info-btn {
@@ -478,6 +622,8 @@
   </svg>
 </div>
 
+<button class="lang-switch-btn" id="langSwitchBtn" aria-label="Sprache wechseln">🇩🇪</button>
+
 <div id="app">
 
   <!-- LANGUAGE SCREEN -->
@@ -490,9 +636,32 @@
     </div>
   </div>
 
+  <!-- MAIN MENU SCREEN -->
+  <div class="screen" id="menu-screen">
+    <h1><span data-i18n="appTitle">CO₂ Table</span></h1>
+    <p class="subtitle" data-i18n="menuSubtitle">Wähle einen Modus</p>
+    <div class="card">
+      <button class="choice-btn" id="modeCo2Btn">
+        <span class="choice-icon">🫧</span>
+        <span class="choice-text">
+          <span data-i18n="modeCo2">CO₂ Table</span>
+          <span class="choice-sub" data-i18n="modeCo2Sub">8 Runden Atemtraining</span>
+        </span>
+      </button>
+      <button class="choice-btn" id="modeHoldBtn">
+        <span class="choice-icon">🤿</span>
+        <span class="choice-text">
+          <span data-i18n="modeHold">Atem-Stoppuhr</span>
+          <span class="choice-sub" data-i18n="modeHoldSub">Blind gegen deinen Rekord</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
   <!-- START SCREEN -->
   <div class="screen" id="start-screen">
     <button class="info-btn" id="infoBtn" aria-label="Info">ⓘ</button>
+    <button class="back-btn" id="startBackBtn" aria-label="Zurück">←</button>
     <h1><span class="wave-emoji" data-i18n="wave">🫧</span><span data-i18n="appTitle">CO₂ Table</span></h1>
     <p class="subtitle" data-i18n="appSubtitle">Atemtraining zur Verbesserung deiner CO₂-Toleranz beim Apnoetauchen</p>
     <div class="card">
@@ -561,11 +730,44 @@
     </div>
   </div>
 
+  <!-- BREATH-HOLD STOPWATCH SCREEN -->
+  <div class="screen" id="hold-screen">
+    <button class="info-btn" id="holdInfoBtn" aria-label="Info">ⓘ</button>
+    <button class="back-btn" id="holdBackBtn" aria-label="Zurück">←</button>
+    <h1 data-i18n="holdTitle">Atem-Stoppuhr</h1>
+    <p class="subtitle" data-i18n="holdSubtitle">Halte die Luft an, ohne auf die Zeit zu schauen. Du siehst sie nur, wenn du deinen Rekord brichst.</p>
+
+    <div class="hold-status" id="holdStatus" data-i18n="holdReady">Bereit</div>
+
+    <div class="hold-circle-wrap">
+      <button class="hold-btn" id="holdToggleBtn" data-i18n="holdStartBtn">Start</button>
+    </div>
+
+    <div class="hold-result" id="holdResult"></div>
+
+    <button class="btn-control" id="holdHistoryBtn" style="width:100%;" data-i18n="holdHistoryBtn">Verlauf &amp; Rekorde</button>
+  </div>
+
+  <!-- HOLD HISTORY / CHART SCREEN -->
+  <div class="screen" id="hold-history-screen">
+    <button class="back-btn" id="historyBackBtn" aria-label="Zurück">←</button>
+    <h1 data-i18n="historyTitle">Verlauf</h1>
+    <p class="subtitle" data-i18n="historySubtitle">Deine letzten Luftanhaltezeiten im Überblick</p>
+
+    <div class="history-stats-row" id="historyStatsRow"></div>
+
+    <div class="chart-wrap">
+      <svg id="holdChart" viewBox="0 0 300 180" preserveAspectRatio="none"></svg>
+    </div>
+
+    <div class="history-list" id="historyList"></div>
+  </div>
+
 </div>
 
 <div class="modal-overlay" id="infoModal">
   <div class="modal-card">
-    <div class="modal-title" data-i18n="infoModalTitle">So funktioniert's</div>
+    <div class="modal-title" id="infoModalTitle" data-i18n="infoModalTitle">So funktioniert's</div>
     <div class="modal-body" id="infoModalBody"></div>
     <button class="btn-modal-ok" id="infoModalOk" data-i18n="infoModalOk">OK, verstanden</button>
   </div>
@@ -605,6 +807,60 @@
       finishSub: "Du hast alle 8 Runden erfolgreich absolviert.",
       restartBtn: "Neues Training",
       footerCreator: "Ersteller",
+      menuSubtitle: "Wähle einen Modus",
+      modeCo2: "CO₂ Table",
+      modeCo2Sub: "8 Runden Atemtraining",
+      modeHold: "Atem-Stoppuhr",
+      modeHoldSub: "Blind gegen deinen Rekord",
+      holdTitle: "Atem-Stoppuhr",
+      holdSubtitle: "Halte die Luft an, ohne auf die Zeit zu schauen. Du siehst sie nur, wenn du deinen Rekord brichst.",
+      holdReady: "Bereit",
+      holdRunning: "Halte die Luft an …",
+      holdStartBtn: "Start",
+      holdStopBtn: "Stop",
+      holdNewRecordLabel: "🎉 Neuer Rekord!",
+      holdSavedLabel: "Gespeichert – kein neuer Rekord",
+      holdHistoryBtn: "Verlauf & Rekorde",
+      historyTitle: "Verlauf",
+      historySubtitle: "Deine letzten Luftanhaltezeiten im Überblick",
+      historyBestLabel: "Bestzeit",
+      historyAttemptsLabel: "Versuche",
+      historyEmpty: "Noch keine Versuche gespeichert. Starte deinen ersten Atem-Stopp!",
+      welcomeModalTitle: "Willkommen",
+      welcomeModalBody:
+        '<p>Diese App bietet dir zwei Trainingsmodi:</p>' +
+        '<p><strong>🫧 CO₂ Table</strong> – 8 Runden Luftanhalten mit sich verkürzenden Pausen, um deine CO₂-Toleranz zu verbessern.</p>' +
+        '<p><strong>🤿 Atem-Stoppuhr</strong> – Halte die Luft blind an, ohne die Zeit zu sehen, und miss dich an deinem persönlichen Rekord.</p>' +
+        '<div class="modal-warning"><strong>Wichtig – bitte unbedingt beachten:</strong>' +
+        '<ul>' +
+        '<li>Niemals im oder unter Wasser üben – nur an Land, im Sitzen oder Liegen.</li>' +
+        '<li>Nie alleine üben – am besten mit einer weiteren Person in der Nähe.</li>' +
+        '<li>Nicht beim Autofahren oder Bedienen von Maschinen.</li>' +
+        '<li>Nicht bei Herz-Kreislauf-Erkrankungen, Epilepsie, in der Schwangerschaft oder bei anderen Vorerkrankungen ohne ärztliche Rücksprache.</li>' +
+        '<li>Nicht direkt nach einer großen Mahlzeit oder unter Alkohol-/Drogeneinfluss.</li>' +
+        '<li>Sofort abbrechen bei Schwindel, Kribbeln, Sehstörungen oder Unwohlsein.</li>' +
+        '<li>Nie über ein unangenehmes Gefühl hinaus forcieren.</li>' +
+        '</ul>' +
+        '3 Einheiten pro Woche reichen völlig aus.</div>' +
+        '<p>Mehr Details zu jedem Modus findest du über das ⓘ-Symbol auf der jeweiligen Seite.</p>',
+      holdInfoModalBody:
+        '<p>Bei der <strong>Atem-Stoppuhr</strong> hältst du die Luft an, ohne auf die Zeit zu schauen – so vermeidest du Stress durch das Beobachten der Uhr.</p>' +
+        '<p><strong>So geht\'s:</strong></p>' +
+        '<ol>' +
+        '<li>Drücke Start und halte die Luft an, so lange es angenehm möglich ist.</li>' +
+        '<li>Drücke Stop, sobald du fertig bist.</li>' +
+        '<li>Die Zeit siehst du nur, wenn du deinen bisherigen Rekord gebrochen hast – sonst nur eine kurze Bestätigung.</li>' +
+        '<li>Unter "Verlauf & Rekorde" siehst du deinen Fortschritt als Diagramm.</li>' +
+        '</ol>' +
+        '<div class="modal-warning"><strong>Wichtig – bitte unbedingt beachten:</strong>' +
+        '<ul>' +
+        '<li>Niemals im oder unter Wasser üben – nur an Land, im Sitzen oder Liegen.</li>' +
+        '<li>Nie alleine üben – am besten mit einer weiteren Person in der Nähe.</li>' +
+        '<li>Nicht beim Autofahren oder Bedienen von Maschinen.</li>' +
+        '<li>Nicht bei Herz-Kreislauf-Erkrankungen, Epilepsie, in der Schwangerschaft oder bei anderen Vorerkrankungen ohne ärztliche Rücksprache.</li>' +
+        '<li>Sofort abbrechen bei Schwindel, Kribbeln, Sehstörungen oder Unwohlsein.</li>' +
+        '<li>Nie über ein unangenehmes Gefühl hinaus forcieren – auch nicht, um einen Rekord zu brechen.</li>' +
+        '</ul></div>',
       infoModalTitle: "So funktioniert's",
       infoModalOk: "OK, verstanden",
       infoModalBody:
@@ -615,7 +871,15 @@
         '<li>Die App berechnet automatisch deine Trainingszeit (50 % deiner Maximalzeit) für alle 8 Runden.</li>' +
         '<li>Halte in jeder Runde die Luft an, bis der Timer abläuft, atme dann während der Pause ganz normal weiter.</li>' +
         '</ol>' +
-        '<div class="modal-warning"><strong>Wichtig:</strong> Übe nur an Land, im Sitzen oder Liegen – niemals im oder unter Wasser und nicht beim Autofahren. Höre sofort auf, wenn dir schwindelig wird.</div>' +
+        '<div class="modal-warning"><strong>Wichtig – bitte unbedingt beachten:</strong>' +
+        '<ul>' +
+        '<li>Niemals im oder unter Wasser üben – nur an Land, im Sitzen oder Liegen.</li>' +
+        '<li>Nie alleine üben – am besten mit einer weiteren Person in der Nähe.</li>' +
+        '<li>Nicht beim Autofahren oder Bedienen von Maschinen.</li>' +
+        '<li>Nicht bei Herz-Kreislauf-Erkrankungen, Epilepsie, in der Schwangerschaft oder bei anderen Vorerkrankungen ohne ärztliche Rücksprache.</li>' +
+        '<li>Nicht direkt nach einer großen Mahlzeit oder unter Alkohol-/Drogeneinfluss.</li>' +
+        '<li>Sofort abbrechen bei Schwindel, Kribbeln, Sehstörungen oder Unwohlsein.</li>' +
+        '</ul></div>' +
         '<p>Für beste Ergebnisse reichen <strong>3 Einheiten pro Woche</strong> völlig aus – dein Körper braucht dazwischen Erholung. Öfter zu trainieren bringt keinen zusätzlichen Nutzen.</p>'
     },
     en: {
@@ -645,6 +909,60 @@
       finishSub: "You've successfully completed all 8 rounds.",
       restartBtn: "New training",
       footerCreator: "Made by",
+      menuSubtitle: "Choose a mode",
+      modeCo2: "CO₂ Table",
+      modeCo2Sub: "8-round breath training",
+      modeHold: "Breath-hold stopwatch",
+      modeHoldSub: "Blind, against your record",
+      holdTitle: "Breath-hold stopwatch",
+      holdSubtitle: "Hold your breath without watching the clock. You'll only see the time if you beat your record.",
+      holdReady: "Ready",
+      holdRunning: "Hold your breath …",
+      holdStartBtn: "Start",
+      holdStopBtn: "Stop",
+      holdNewRecordLabel: "🎉 New record!",
+      holdSavedLabel: "Saved – no new record",
+      holdHistoryBtn: "History & records",
+      historyTitle: "History",
+      historySubtitle: "Your recent breath-hold times at a glance",
+      historyBestLabel: "Best time",
+      historyAttemptsLabel: "Attempts",
+      historyEmpty: "No attempts saved yet. Start your first breath hold!",
+      welcomeModalTitle: "Welcome",
+      welcomeModalBody:
+        '<p>This app offers two training modes:</p>' +
+        '<p><strong>🫧 CO₂ Table</strong> – 8 rounds of breath-holding with shrinking breaks, to improve your CO₂ tolerance.</p>' +
+        '<p><strong>🤿 Breath-hold stopwatch</strong> – Hold your breath blind, without watching the clock, and measure yourself against your personal record.</p>' +
+        '<div class="modal-warning"><strong>Important — please read carefully:</strong>' +
+        '<ul>' +
+        '<li>Never practice in or under water — only on land, sitting or lying down.</li>' +
+        '<li>Never practice alone — ideally have someone nearby.</li>' +
+        '<li>Not while driving or operating machinery.</li>' +
+        '<li>Not with heart conditions, epilepsy, during pregnancy, or other pre-existing conditions without medical advice.</li>' +
+        '<li>Not right after a large meal or under the influence of alcohol/drugs.</li>' +
+        '<li>Stop immediately if you feel dizzy, tingling, vision changes, or unwell.</li>' +
+        '<li>Never push past a point of discomfort.</li>' +
+        '</ul>' +
+        '3 sessions per week are plenty.</div>' +
+        '<p>You can find more details on each mode via the ⓘ icon on that screen.</p>',
+      holdInfoModalBody:
+        '<p>In the <strong>breath-hold stopwatch</strong>, you hold your breath without watching the clock — avoiding the stress of staring at a timer.</p>' +
+        '<p><strong>How to do it:</strong></p>' +
+        '<ol>' +
+        '<li>Press Start and hold your breath for as long as comfortably possible.</li>' +
+        '<li>Press Stop once you\'re done.</li>' +
+        '<li>You\'ll only see the time if you beat your previous record — otherwise just a short confirmation.</li>' +
+        '<li>Under "History & records" you can see your progress as a chart.</li>' +
+        '</ol>' +
+        '<div class="modal-warning"><strong>Important — please read carefully:</strong>' +
+        '<ul>' +
+        '<li>Never practice in or under water — only on land, sitting or lying down.</li>' +
+        '<li>Never practice alone — ideally have someone nearby.</li>' +
+        '<li>Not while driving or operating machinery.</li>' +
+        '<li>Not with heart conditions, epilepsy, during pregnancy, or other pre-existing conditions without medical advice.</li>' +
+        '<li>Stop immediately if you feel dizzy, tingling, vision changes, or unwell.</li>' +
+        '<li>Never push past a point of discomfort — not even to beat a record.</li>' +
+        '</ul></div>',
       infoModalTitle: "How it works",
       infoModalOk: "OK, got it",
       infoModalBody:
@@ -655,7 +973,15 @@
         '<li>The app automatically calculates your training time (50% of your maximum) for all 8 rounds.</li>' +
         '<li>Hold your breath each round until the timer runs out, then breathe normally during the break.</li>' +
         '</ol>' +
-        '<div class="modal-warning"><strong>Important:</strong> Only practice on land, sitting or lying down — never in or under water, and never while driving. Stop immediately if you feel dizzy.</div>' +
+        '<div class="modal-warning"><strong>Important — please read carefully:</strong>' +
+        '<ul>' +
+        '<li>Never practice in or under water — only on land, sitting or lying down.</li>' +
+        '<li>Never practice alone — ideally have someone nearby.</li>' +
+        '<li>Not while driving or operating machinery.</li>' +
+        '<li>Not with heart conditions, epilepsy, during pregnancy, or other pre-existing conditions without medical advice.</li>' +
+        '<li>Not right after a large meal or under the influence of alcohol/drugs.</li>' +
+        '<li>Stop immediately if you feel dizzy, tingling, vision changes, or unwell.</li>' +
+        '</ul></div>' +
         '<p>For best results, <strong>3 sessions per week</strong> are enough — your body needs recovery in between. Training more often gives no extra benefit.</p>'
     }
   };
@@ -691,10 +1017,26 @@
   var trainingScreen = document.getElementById('training-screen');
   var finishedScreen = document.getElementById('finished-screen');
   var languageScreen = document.getElementById('language-screen');
+  var menuScreen = document.getElementById('menu-screen');
+  var holdScreen = document.getElementById('hold-screen');
+  var holdHistoryScreen = document.getElementById('hold-history-screen');
   var infoModal = document.getElementById('infoModal');
   var infoModalBody = document.getElementById('infoModalBody');
   var infoBtn = document.getElementById('infoBtn');
   var infoModalOk = document.getElementById('infoModalOk');
+  var startBackBtn = document.getElementById('startBackBtn');
+  var langSwitchBtn = document.getElementById('langSwitchBtn');
+  var modeCo2Btn = document.getElementById('modeCo2Btn');
+  var modeHoldBtn = document.getElementById('modeHoldBtn');
+  var holdBackBtn = document.getElementById('holdBackBtn');
+  var historyBackBtn = document.getElementById('historyBackBtn');
+  var holdStatus = document.getElementById('holdStatus');
+  var holdToggleBtn = document.getElementById('holdToggleBtn');
+  var holdResult = document.getElementById('holdResult');
+  var holdHistoryBtn = document.getElementById('holdHistoryBtn');
+  var historyStatsRow = document.getElementById('historyStatsRow');
+  var holdChart = document.getElementById('holdChart');
+  var historyList = document.getElementById('historyList');
 
   var roundLabel = document.getElementById('roundLabel');
   var phaseLabel = document.getElementById('phaseLabel');
@@ -849,20 +1191,70 @@
   secInput.addEventListener('input', updatePreview);
 
   function showScreen(el) {
-    [languageScreen, startScreen, trainingScreen, finishedScreen].forEach(function(s) {
+    [languageScreen, menuScreen, startScreen, trainingScreen, finishedScreen, holdScreen, holdHistoryScreen].forEach(function(s) {
       s.classList.remove('active');
     });
     el.classList.add('active');
+    langSwitchBtn.classList.toggle('hide', el === languageScreen);
   }
 
   // ---- Language selection & info modal ----
+  var LANG_FLAGS = { de: '🇩🇪', en: '🇬🇧' };
+
   function setLanguage(lang) {
     currentLang = TRANSLATIONS[lang] ? lang : 'de';
     applyTranslations();
+    langSwitchBtn.textContent = LANG_FLAGS[currentLang] || '🌐';
   }
 
-  function openInfoModal() {
-    infoModalBody.innerHTML = t('infoModalBody');
+  // Re-applies translations to both static (data-i18n) and dynamically
+  // generated text that isn't covered by data-i18n, so switching language
+  // mid-use (e.g. during an active training) updates everything correctly.
+  function refreshAllDynamicText() {
+    applyTranslations();
+    langSwitchBtn.textContent = LANG_FLAGS[currentLang] || '🌐';
+
+    try {
+      roundLabel.textContent = t('roundLabel').replace('{n}', currentRound).replace('{total}', TOTAL_ROUNDS);
+      phaseLabel.textContent = (currentPhase === 'hold') ? t('phaseHold') : t('phasePause');
+      pauseBoxTitle.textContent = (currentPhase === 'hold') ? t('infoNextPause') : t('infoCurrentPause');
+      toggleBtn.textContent = isPaused ? t('btnResume') : t('btnPause');
+    } catch (e) {}
+
+    try { updatePreview(); } catch (e) {}
+    renderStatsSafe();
+
+    try {
+      if (holdRunning) {
+        holdStatus.textContent = t('holdRunning');
+        holdToggleBtn.textContent = t('holdStopBtn');
+      } else {
+        holdStatus.textContent = t('holdReady');
+        holdToggleBtn.textContent = t('holdStartBtn');
+      }
+    } catch (e) {}
+
+    try {
+      if (holdHistoryScreen.classList.contains('active')) {
+        renderHoldHistory();
+      }
+    } catch (e) {}
+  }
+
+  function toggleLanguage() {
+    var next = (currentLang === 'de') ? 'en' : 'de';
+    setLanguage(next);
+    try { localStorage.setItem(LANG_KEY, next); } catch (e) {}
+    refreshAllDynamicText();
+  }
+
+  langSwitchBtn.addEventListener('click', toggleLanguage);
+
+  var infoModalTitleEl = document.getElementById('infoModalTitle');
+
+  function openInfoModal(bodyKey, titleKey) {
+    infoModalBody.innerHTML = t(bodyKey || 'infoModalBody');
+    infoModalTitleEl.textContent = t(titleKey || 'infoModalTitle');
     infoModal.classList.add('show');
   }
 
@@ -877,12 +1269,14 @@
       setLanguage(chosen);
       try { localStorage.setItem(LANG_KEY, chosen); } catch (e) {}
       renderStatsSafe();
-      openInfoModal();
-      showScreen(startScreen);
+      openInfoModal('welcomeModalBody', 'welcomeModalTitle');
+      showScreen(menuScreen);
     });
   }
 
-  infoBtn.addEventListener('click', openInfoModal);
+  infoBtn.addEventListener('click', function() { openInfoModal('infoModalBody', 'infoModalTitle'); });
+  var holdInfoBtn = document.getElementById('holdInfoBtn');
+  holdInfoBtn.addEventListener('click', function() { openInfoModal('holdInfoModalBody', 'infoModalTitle'); });
   infoModalOk.addEventListener('click', closeInfoModal);
 
   function renderStatsSafe() {
@@ -895,13 +1289,34 @@
     try { saved = localStorage.getItem(LANG_KEY); } catch (e) {}
     if (saved && TRANSLATIONS[saved]) {
       setLanguage(saved);
-      showScreen(startScreen);
+      showScreen(menuScreen);
     } else {
       // Try to preselect based on browser language, but still ask explicitly
       setLanguage('de');
       showScreen(languageScreen);
     }
   })();
+
+  // ---- Main menu navigation ----
+  modeCo2Btn.addEventListener('click', function() {
+    renderStatsSafe();
+    showScreen(startScreen);
+    openInfoModal('infoModalBody', 'infoModalTitle');
+  });
+  modeHoldBtn.addEventListener('click', function() {
+    showScreen(holdScreen);
+    resetHoldUI();
+    openInfoModal('holdInfoModalBody', 'infoModalTitle');
+  });
+  startBackBtn.addEventListener('click', function() {
+    showScreen(menuScreen);
+  });
+  holdBackBtn.addEventListener('click', function() {
+    showScreen(menuScreen);
+  });
+  historyBackBtn.addEventListener('click', function() {
+    showScreen(holdScreen);
+  });
 
   function vibrate(pattern) {
     if (navigator.vibrate) {
@@ -1107,6 +1522,160 @@
     if (document.visibilityState === 'visible' && trainingScreen.classList.contains('active') && !isPaused) {
       requestWakeLock();
     }
+  });
+
+  // ---- Breath-hold stopwatch (blind timing, reveals time only on new record) ----
+  var HOLD_HISTORY_KEY = 'co2table_hold_history_v1';
+  var holdRunning = false;
+  var holdStartTime = 0;
+
+  function loadHoldHistory() {
+    try {
+      var raw = localStorage.getItem(HOLD_HISTORY_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveHoldAttempt(seconds) {
+    try {
+      var history = loadHoldHistory();
+      history.push({ t: new Date().toISOString(), s: Math.round(seconds) });
+      localStorage.setItem(HOLD_HISTORY_KEY, JSON.stringify(history));
+    } catch (e) {}
+  }
+
+  function getHoldBest(history) {
+    var best = 0;
+    for (var i = 0; i < history.length; i++) {
+      if (history[i].s > best) best = history[i].s;
+    }
+    return best;
+  }
+
+  function resetHoldUI() {
+    holdRunning = false;
+    holdStartTime = 0;
+    holdStatus.textContent = t('holdReady');
+    holdToggleBtn.textContent = t('holdStartBtn');
+    holdToggleBtn.classList.remove('running');
+    holdResult.innerHTML = '';
+    releaseWakeLock();
+  }
+
+  function toggleHold() {
+    if (!holdRunning) {
+      // Start timing - no numbers shown anywhere while running
+      holdRunning = true;
+      holdStartTime = Date.now();
+      holdStatus.textContent = t('holdRunning');
+      holdToggleBtn.textContent = t('holdStopBtn');
+      holdToggleBtn.classList.add('running');
+      holdResult.innerHTML = '';
+      requestWakeLock();
+    } else {
+      // Stop timing - reveal the result
+      holdRunning = false;
+      var elapsedSeconds = (Date.now() - holdStartTime) / 1000;
+      holdStatus.textContent = t('holdReady');
+      holdToggleBtn.textContent = t('holdStartBtn');
+      holdToggleBtn.classList.remove('running');
+      releaseWakeLock();
+
+      var previousBest = getHoldBest(loadHoldHistory());
+      var isNewRecord = elapsedSeconds > previousBest;
+      saveHoldAttempt(elapsedSeconds);
+
+      if (isNewRecord) {
+        holdResult.innerHTML =
+          '<div class="record-time">' + formatTime(elapsedSeconds) + '</div>' +
+          '<div class="record-label">' + t('holdNewRecordLabel') + '</div>';
+      } else {
+        holdResult.innerHTML =
+          '<div class="record-label">' + t('holdSavedLabel') + '</div>';
+      }
+    }
+  }
+
+  holdToggleBtn.addEventListener('click', toggleHold);
+
+  function renderHoldHistory() {
+    var history = loadHoldHistory();
+    var best = getHoldBest(history);
+
+    if (history.length === 0) {
+      historyStatsRow.innerHTML = '';
+      holdChart.innerHTML = '';
+      historyList.innerHTML = '<div class="history-empty">' + t('historyEmpty') + '</div>';
+      return;
+    }
+
+    historyStatsRow.innerHTML =
+      '<div class="stat-pill"><div class="stat-num">' + formatTime(best) + '</div><div class="stat-lbl">' + t('historyBestLabel') + '</div></div>' +
+      '<div class="stat-pill"><div class="stat-num">' + history.length + '</div><div class="stat-lbl">' + t('historyAttemptsLabel') + '</div></div>';
+
+    renderHoldChart(history);
+
+    var listHtml = '';
+    var recent = history.slice(-20).reverse();
+    for (var i = 0; i < recent.length; i++) {
+      var item = recent[i];
+      var d = new Date(item.t);
+      var dateStr = d.toLocaleDateString(currentLang === 'de' ? 'de-DE' : 'en-US', { day: '2-digit', month: '2-digit' });
+      var isBest = item.s === best;
+      listHtml += '<div class="history-item' + (isBest ? ' is-best' : '') + '">' +
+        '<span class="hi-time">' + formatTime(item.s) + (isBest ? ' 🏆' : '') + '</span>' +
+        '<span class="hi-date">' + dateStr + '</span>' +
+        '</div>';
+    }
+    historyList.innerHTML = listHtml;
+  }
+
+  function renderHoldChart(history) {
+    var points = history.slice(-30); // last 30 attempts for readability
+    var W = 300, H = 180, padX = 8, padY = 14;
+    var maxVal = 0;
+    for (var i = 0; i < points.length; i++) {
+      if (points[i].s > maxVal) maxVal = points[i].s;
+    }
+    if (maxVal <= 0) maxVal = 1;
+
+    var n = points.length;
+    var stepX = n > 1 ? (W - padX * 2) / (n - 1) : 0;
+
+    function xFor(idx) { return padX + idx * stepX; }
+    function yFor(val) { return H - padY - (val / maxVal) * (H - padY * 2); }
+
+    var svgParts = [];
+
+    // Baseline grid line
+    svgParts.push('<line x1="' + padX + '" y1="' + (H - padY) + '" x2="' + (W - padX) + '" y2="' + (H - padY) + '" stroke="rgba(255,255,255,0.12)" stroke-width="1"></line>');
+
+    if (n === 1) {
+      var x0 = xFor(0), y0 = yFor(points[0].s);
+      svgParts.push('<circle cx="' + x0 + '" cy="' + y0 + '" r="4" fill="#4de3ff"></circle>');
+    } else {
+      for (var s = 0; s < n - 1; s++) {
+        var x1 = xFor(s), y1 = yFor(points[s].s);
+        var x2 = xFor(s + 1), y2 = yFor(points[s + 1].s);
+        var up = points[s + 1].s >= points[s].s;
+        var color = up ? '#2de8b0' : '#ff7a5c';
+        svgParts.push('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round"></line>');
+      }
+      for (var p = 0; p < n; p++) {
+        var cx = xFor(p), cy = yFor(points[p].s);
+        var dotColor = (points[p].s === maxVal) ? '#4de3ff' : '#eaf6ff';
+        svgParts.push('<circle cx="' + cx + '" cy="' + cy + '" r="3" fill="' + dotColor + '"></circle>');
+      }
+    }
+
+    holdChart.innerHTML = svgParts.join('');
+  }
+
+  holdHistoryBtn.addEventListener('click', function() {
+    renderHoldHistory();
+    showScreen(holdHistoryScreen);
   });
 
   // Decorative bubble animation - wrapped so it can never block core functionality
